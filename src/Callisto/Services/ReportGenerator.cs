@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using Callisto.Models;
@@ -166,7 +167,7 @@ public class ReportGenerator
         html.AppendLine("<body>");
         html.AppendLine("    <div class='container'>");
         html.AppendLine($"        <h1>🛡️ Callisto Security Scan Report</h1>");
-        html.AppendLine($"        <p><strong>Subscription:</strong> {result.SubscriptionName} ({result.SubscriptionId})</p>");
+        html.AppendLine($"        <p><strong>Subscription:</strong> {WebUtility.HtmlEncode(result.SubscriptionName)} ({WebUtility.HtmlEncode(result.SubscriptionId)})</p>");
         html.AppendLine($"        <p><strong>Scan Date:</strong> {result.ScanStartTime:yyyy-MM-dd HH:mm:ss} UTC</p>");
         html.AppendLine($"        <p><strong>Duration:</strong> {(result.ScanEndTime - result.ScanStartTime).TotalSeconds:F1} seconds</p>");
 
@@ -214,18 +215,18 @@ public class ReportGenerator
             html.AppendLine($"        <div class='finding {severityClass}'>");
             html.AppendLine($"            <h3>");
             html.AppendLine($"                <span class='badge {severityClass}'>{finding.Severity}</span>");
-            html.AppendLine($"                {finding.Title}");
+            html.AppendLine($"                {WebUtility.HtmlEncode(finding.Title)}");
             if (finding.CanAutoRemediate)
             {
                 html.AppendLine($"                <span class='remediable'>🔧 Auto-fix available</span>");
             }
             html.AppendLine($"            </h3>");
-            html.AppendLine($"            <p><strong>Resource:</strong> {finding.ResourceName} ({finding.ResourceType})</p>");
-            html.AppendLine($"            <p>{finding.Description}</p>");
-            html.AppendLine($"            <p><strong>Recommendation:</strong> {finding.Recommendation}</p>");
+            html.AppendLine($"            <p><strong>Resource:</strong> {WebUtility.HtmlEncode(finding.ResourceName)} ({WebUtility.HtmlEncode(finding.ResourceType)})</p>");
+            html.AppendLine($"            <p>{WebUtility.HtmlEncode(finding.Description)}</p>");
+            html.AppendLine($"            <p><strong>Recommendation:</strong> {WebUtility.HtmlEncode(finding.Recommendation)}</p>");
             if (finding.CanAutoRemediate && !string.IsNullOrEmpty(finding.RemediationAction))
             {
-                html.AppendLine($"            <p><strong>Auto-remediation:</strong> {finding.RemediationAction}</p>");
+                html.AppendLine($"            <p><strong>Auto-remediation:</strong> {WebUtility.HtmlEncode(finding.RemediationAction)}</p>");
             }
             html.AppendLine($"            <div class='metadata'>");
             html.AppendLine($"                <strong>Category:</strong> {FormatCategoryName(finding.Category)} | ");
